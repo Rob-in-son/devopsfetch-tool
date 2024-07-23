@@ -32,10 +32,14 @@ help(){
     echo """Usage: devopsfetch [OPTIONS]
     Your devops tool for server information retrieval and monitoring
     Global Options: 
-        -p  --port    Display all active ports and services 
+        -p  --port    Display all active ports and services
+                      Use -p <port_number> to get detailed information about a specific port 
         -d  --docker  List all Docker images and containers 
-        -n  --nginx   Display all Nginx domains and their ports 
+                      Use -d <container_name> to get detailed information about a specific container
+        -n  --nginx   Display all Nginx domains and their ports
+                      Use -n <domain> to get detailed configuration information for a specific domain
         -u  --users   List all users and their last login times
+                      Use -u <username> to get detailed information about a specific user
         -t  --time    Display activities within a specified time range
         -h  --help    Provide usage instructions for the program"""
 }
