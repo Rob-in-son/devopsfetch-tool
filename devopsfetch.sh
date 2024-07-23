@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # Define functions for each information required
 
