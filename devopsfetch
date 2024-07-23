@@ -47,29 +47,32 @@ help(){
 # Process options when the devopsfetch is called
 while getopts 'pdnuth' OPTION; do 
     case "$OPTION" in
-        #  p) 
+        #  p | port) 
     
         #     ;;
 
-        #  d) 
+        #  d | --docker) 
     
         #     ;;
 
-        #  n) 
+        #  n | --nginx) 
     
         #     ;;
 
-        #  u) 
+        #  u | --users) 
     
         #     ;;
 
-        #  t) 
+        #  t | --time) 
     
         #     ;;
         
-        h) 
+        h | --help) 
             help
             ;;
+        # \?)
+        #     echo "Invalid options"
+        #     ;;
 
     esac
 done
