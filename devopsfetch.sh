@@ -34,7 +34,7 @@ help(){
 }
 
 # Process options when the devopsfetch is called
-while devopsfetch 'pdnuth' OPTIONS; do 
+while getops 'pdnuth' OPTIONS; do 
     case "$OPTION" in
         # p) 
         #     ;;
