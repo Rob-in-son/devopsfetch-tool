@@ -30,7 +30,7 @@
 # Help
 help(){
     echo "Usage"
-
+    return
 }
 
 # Process options when the devopsfetch is called
