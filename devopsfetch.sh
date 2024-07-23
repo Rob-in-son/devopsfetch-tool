@@ -36,20 +36,25 @@ help(){
 # Process options when the devopsfetch is called
 while getopts 'pdnuth' OPTIONS; do 
     case "$OPTION" in
-        # p) 
-        #     ;;
+         p) 
+            echo "Testing ports"
+            ;;
 
-        # d) 
-        #     ;;
+         d) 
+            echo "Testing docker"
+            ;;
 
-        # n) 
-        #     ;;
+         n) 
+            echo "Testing nginx"
+            ;;
 
-        # u) 
-        #     ;;
+         u) 
+            echo "Testing users"
+            ;;
 
-        # t) 
-        #     ;;
+         t) 
+            echo "Testing time-range"
+            ;;
         
         h) 
             help
