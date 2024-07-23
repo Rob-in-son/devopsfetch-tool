@@ -29,32 +29,31 @@
 
 # Help
 help(){
-    echo "Usage"
-    exit 0
+    free -m | grep Mem
 }
 
 # Process options when the devopsfetch is called
-while getopts 'pdnuth' OPTIONS; do 
+while getopts 'pdnuth' OPTION; do 
     case "$OPTION" in
-         p) 
-            echo "Testing ports"
-            ;;
+        #  p) 
+    
+        #     ;;
 
-         d) 
-            echo "Testing docker"
-            ;;
+        #  d) 
+    
+        #     ;;
 
-         n) 
-            echo "Testing nginx"
-            ;;
+        #  n) 
+    
+        #     ;;
 
-         u) 
-            echo "Testing users"
-            ;;
+        #  u) 
+    
+        #     ;;
 
-         t) 
-            echo "Testing time-range"
-            ;;
+        #  t) 
+    
+        #     ;;
         
         h) 
             help
