@@ -2,55 +2,57 @@
 
 # Define functions for each information required
 
-# ports
-ports(){
+# # ports
+# ports(){
 
-}
+# }
 
-# docker
-docker(){
+# # docker
+# docker(){
 
-}
+# }
 
-# Nginx
-nginx(){
+# # Nginx
+# nginx(){
 
-}
+# }
 
-# Users
-users(){
+# # Users
+# users(){
 
-}
+# }
 
-# Time range
-time_range(){
+# # Time range
+# time_range(){
 
-}
+# }
 
 # Help
 help(){
+    echo "Usage"
 
 }
 
 # Process options when the devopsfetch is called
 while devopsfetch 'pdnuth' OPTIONS; do 
     case "$OPTION" in
-        p) 
-            ;;
+        # p) 
+        #     ;;
 
-        d) 
-            ;;
+        # d) 
+        #     ;;
 
-        n) 
-            ;;
+        # n) 
+        #     ;;
 
-        u) 
-            ;;
+        # u) 
+        #     ;;
 
-        t) 
-            ;;
+        # t) 
+        #     ;;
         
         h) 
+            help
             ;;
 
     esac
