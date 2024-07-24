@@ -51,16 +51,22 @@ nginx(){
             /proxy_pass/ { proxy=$3; gsub(/;/, "", proxy); print file " | " domain " | " proxy }
         ' | column -t -s '|'
    else
-      # Search for domain details in nginx configuration
         domain="$1"
         echo "Details for domain $domain:"
-        result=$(grep -r "server_name.*$domain" /etc/nginx/sites-enabled/*)
-        if [ -n "$result" ]; then
-            echo "$result"
-            # Optionally, you can extract more details as needed
+        config_file=$(grep -l "server_name.*$domain" /etc/nginx/sites-enabled/*)
+        if [ -n "$config_file" ]; then
+            echo "Configuration file: $config_file"
+            echo "Server block:"
+            sed -n '/server {/,/}/p' "$config_file" | sed 's/^/    /'
+            echo "Listening ports:"
+            grep "listen" "$config_file" | sed 's/^/    /'
+            echo "Proxy configuration:"
+            grep "proxy_pass" "$config_file" | sed 's/^/    /'
+            echo "SSL configuration:"
+            grep "ssl_certificate" "$config_file" | sed 's/^/    /'
         else
             echo "Domain '$domain' not found in Nginx configurations."
-        fi  
+        fi
     fi
 }
 
