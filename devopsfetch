@@ -56,9 +56,9 @@ case "$1" in
     
         #     ;;
 
-        # -d | --docker) 
-        #     docker "$2"
-        #     ;;
+        -d | --docker) 
+            docker "$2"
+            ;;
 
         #  n | --nginx) 
     
