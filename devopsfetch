@@ -25,23 +25,39 @@ docker_info(){
 
 # Nginx
 nginx(){
-    echo "Nginx Configurations:"
-    (echo "Config_File Domain Port Proxy";
-    for conf in /etc/nginx/sites-enabled/*; do
-        if [ -f "$conf" ]; then
-            domain=$(grep -m1 'server_name' "$conf" | awk '{print $2}' | sed 's/;$//')
-            port=$(grep -m1 'listen' "$conf" | awk '{print $2}' | sed 's/;$//')
-            proxy=$(grep -m1 'proxy_pass' "$conf" | awk '{print $2}' | sed 's/;$//')
-            
-            # If proxy is not found, try to find root
-            if [ -z "$proxy" ]; then
-                proxy=$(grep -m1 'root' "$conf" | awk '{print $2}' | sed 's/;$//')
-                proxy=${proxy:-"N/A"}
+    if [ -z "$1" ]; then
+        echo "Nginx Configurations:"
+        (echo "Config_File Domain Port Proxy";
+        for conf in /etc/nginx/sites-enabled/*; do
+            if [ -f "$conf" ]; then
+                domain=$(grep -m1 'server_name' "$conf" | awk '{print $2}' | sed 's/;$//')
+                port=$(grep -m1 'listen' "$conf" | awk '{print $2}' | sed 's/;$//')
+                proxy=$(grep -m1 'proxy_pass' "$conf" | awk '{print $2}' | sed 's/;$//')
+                
+                # If proxy is not found, try to find root
+                if [ -z "$proxy" ]; then
+                    proxy=$(grep -m1 'root' "$conf" | awk '{print $2}' | sed 's/;$//')
+                    proxy=${proxy:-"N/A"}
+                fi
+                
+                echo "$conf $domain ${port:-80} $proxy"
             fi
-            
-            echo "$conf $domain ${port:-80} $proxy"
+        done) | column -t
+    else
+        echo "Configuration for domain $1:"
+        found=false
+        for conf in /etc/nginx/sites-enabled/*; do
+            if grep -q "server_name.*$1" "$conf"; then
+                echo "File: $conf"
+                sed -n '/server {/,/}/p' "$conf"
+                found=true
+                break
+            fi
+        done
+        if [ "$found" = false ]; then
+            echo "No configuration found for domain $1"
         fi
-    done) | column -t    
+    fi
 }
 
 # Users
