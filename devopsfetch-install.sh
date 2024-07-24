@@ -53,7 +53,7 @@ After=network.target
 ExecStart=/usr/local/bin/devopsfetch --time $(date +%Y-%m-%d)
 StandardOutput=append:/var/log/devopsfetch/devopsfetch.log
 StandardError=append:/var/log/devopsfetch/devopsfetch.log
-Restart=always
+Restart=on-failure
 User=root
 
 [Install]
