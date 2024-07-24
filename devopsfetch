@@ -2,7 +2,7 @@
 
 # Define functions for each information required
 
-# # ports
+# ports
 ports(){
     echo "Active Ports and Services:"
     (echo "Port Protocol Service PID Command";
