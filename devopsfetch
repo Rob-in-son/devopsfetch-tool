@@ -45,6 +45,7 @@ docker_info(){
 nginx(){
     if [ -z "$1" ]; then
         echo "Nginx Configurations:"
+        echo "Config File               Domain          Port  Proxy"
         grep -H -r "server_name\|listen\|proxy_pass" /etc/nginx/sites-enabled/* | awk '
             /server_name/ { split($0, a, ":"); file=a[1]; domain=$3; gsub(/;/, "", domain) }
             /listen/ { port=$3; gsub(/;/, "", port) }
