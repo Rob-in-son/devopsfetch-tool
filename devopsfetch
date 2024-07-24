@@ -8,13 +8,13 @@
 # }
 
 # docker
-# docker(){
-#     echo "Docker Images:"
-#         docker images | column -t
-#         echo
-#         echo "Docker Containers:"
-#         docker ps -a | column -t
-# }
+docker(){
+    echo "Docker Images:"
+        docker images | column -t
+        echo
+        echo "Docker Containers:"
+        docker ps -a | column -t
+}
 
 # # Nginx
 # nginx(){
@@ -56,9 +56,9 @@ case "$1" in
     
         #     ;;
 
-        -d | --docker) 
-            docker "$2"
-            ;;
+        # -d | --docker) 
+        #     docker "$2"
+        #     ;;
 
         #  n | --nginx) 
     
@@ -67,8 +67,9 @@ case "$1" in
         -u|--users)
         users "$2"
             ;;
-        #  t | --time) 
-    
+
+        # t | --time) 
+
         #     ;;
         
         -h|--help)
