@@ -7,9 +7,13 @@
 
 # }
 
-# # docker
+# docker
 # docker(){
-
+#     echo "Docker Images:"
+#         docker images | column -t
+#         echo
+#         echo "Docker Containers:"
+#         docker ps -a | column -t
 # }
 
 # # Nginx
@@ -17,10 +21,11 @@
 
 # }
 
-# # Users
-# users(){
-
-# }
+# Users
+users(){
+    echo "Users and Last Login Times:"
+    last | awk '!seen[$1]++ {print $1, $3, $4, $5, $6, $7}' | column -t
+}
 
 # # Time range
 # time_range(){
@@ -39,40 +44,39 @@ help(){
         -n  --nginx   Display all Nginx domains and their ports
                       Use -n <domain> to get detailed configuration information for a specific domain
         -u  --users   List all users and their last login times
-                      Use -u <username> to get detailed information about a specific user
+                      Use -u <username> ls
+                      to get detailed information about a specific user
         -t  --time    Display activities within a specified time range
         -h  --help    Provide usage instructions for the program"""
 }
 
 # Process options when the devopsfetch is called
-while getopts 'pdnuth' OPTION; do 
-    case "$OPTION" in
+case "$1" in
         #  p | port) 
     
         #     ;;
 
-        #  d | --docker) 
-    
-        #     ;;
+        -d | --docker) 
+            docker "$2"
+            ;;
 
         #  n | --nginx) 
     
         #     ;;
 
-        #  u | --users) 
-    
-        #     ;;
-
+        -u|--users)
+        users "$2"
+            ;;
         #  t | --time) 
     
         #     ;;
         
-        h | --help) 
-            help
-            ;;
+        -h|--help)
+        help
+        ;;
         # \?)
         #     echo "Invalid options"
+        #     help
         #     ;;
 
-    esac
-done
+esac
