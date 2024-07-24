@@ -8,7 +8,7 @@
 # }
 
 # docker
-docker(){
+docker_info(){
     echo "Docker Images:"
         docker images | column -t
         echo
@@ -57,7 +57,7 @@ case "$1" in
         #     ;;
 
         -d | --docker) 
-            docker 
+            docker_info "$2"
             ;;
 
         #  n | --nginx) 
