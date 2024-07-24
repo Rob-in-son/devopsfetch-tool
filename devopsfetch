@@ -23,10 +23,14 @@ docker_info(){
         docker ps -a | column -t
 }
 
-# # Nginx
-# nginx(){
-
-# }
+# Nginx
+nginx(){
+    echo "Nginx Domains and Ports:"
+        grep -r server_name /etc/nginx/sites-enabled/* | awk '{print $2}' | sed 's/;//' | sort -u | while read domain; do
+            port=$(grep -r "listen " /etc/nginx/sites-enabled/* | grep -w "$domain" | awk '{print $2}' | sed 's/;//')
+            echo "$domain: $port"
+        done | column -t
+}
 
 # Users
 users(){
@@ -76,9 +80,9 @@ case "$1" in
             docker_info "$2"
             ;;
 
-        #  n | --nginx) 
-    
-        #     ;;
+        -n|--nginx) 
+            nginx "$2"
+            ;;
 
         -u|--users)
             users "$2"
