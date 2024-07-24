@@ -2,25 +2,43 @@
 
 # Define functions for each information required
 
+# Check if the script is running as root
+if [ "$(id -u)" != "0" ]; then
+  echo "This script requires root privileges. Please run with sudo or run as root"
+  exit 1
+fi
+
 # ports
 ports(){
-    echo "Active Ports and Services:"
-    (echo "Port Protocol Service PID Command";
-    sudo lsof -i -P -n | grep LISTEN | awk '{print $9, $1, $2}' | sed 's/://' | sort -n | while read port prog pid; do
-        proto=$(echo $port | cut -d'(' -f2 | cut -d')' -f1)
-        port=$(echo $port | cut -d'(' -f1)
-        cmd=$(ps -p $pid -o comm= | head -1)
-        echo "$port $proto $prog $pid $cmd"
-    done) | column -t
+    if [ -z "$1" ]; then
+        echo "Active Ports and Services:"
+        (echo "Port Protocol Service PID Command";
+         sudo lsof -i -P -n | grep LISTEN | awk '{print $9, $1, $2}' | sed 's/://' | sort -n | while read port prog pid; do
+             proto=$(echo $port | cut -d'(' -f2 | cut -d')' -f1)
+             port=$(echo $port | cut -d'(' -f1)
+             cmd=$(ps -p $pid -o comm= | head -1)
+             echo "$port $proto $prog $pid $cmd"
+         done) | column -t
+    else
+    #show specific details for a port
+        echo "Details for port $1:"
+        sudo lsof -i :$1 -P -n | column -t
+    fi
 }
 
 # docker
 docker_info(){
-    echo "Docker Images:"
+    if [ -z "$1" ]; then
+        echo "Docker Images:"
         docker images | column -t
         echo
         echo "Docker Containers:"
         docker ps -a | column -t
+    else
+    #show specific details for container
+        echo "Details for container $1:"
+        docker inspect "$1" | jq '.[0] | {Name: .Name, State: .State, Mounts: .Mounts, NetworkSettings: .NetworkSettings}'
+    fi
 }
 
 # Nginx
@@ -62,8 +80,16 @@ nginx(){
 
 # Users
 users(){
-    echo "Users and Last Login Times:"
-    last | awk '!seen[$1]++ {print $1, $3, $4, $5, $6, $7}' | column -t
+    if [ -z "$1" ]; then
+        echo "Users and Last Login Times:"
+        last | awk '!seen[$1]++ {print $1, $3, $4, $5, $6, $7}' | column -t
+    else
+    #show specific details of a user
+        echo "Details for user $1:"
+        id "$1"
+        echo "Last login:"
+        last "$1" | head -n 1
+    fi
 }
 
 # Time range
