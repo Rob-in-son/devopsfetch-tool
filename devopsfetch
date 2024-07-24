@@ -25,11 +25,9 @@ docker_info(){
 
 # Nginx
 nginx(){
-    echo "Nginx Domains and Ports:"
-        grep -r server_name /etc/nginx/sites-enabled/* | awk '{print $2}' | sed 's/;//' | sort -u | while read domain; do
-            port=$(grep -r "listen " /etc/nginx/sites-enabled/* | grep -w "$domain" | awk '{print $2}' | sed 's/;//')
-            echo "$domain: $port"
-        done | column -t
+    domain=$(grep -m1 'server_name' "$conf" | awk '{print $2}' | sed 's/;$//')
+    port=$(grep -m1 'listen' "$conf" | awk '{print $2}' | sed 's/;$//')
+    proxy=$(grep -m1 'proxy_pass' "$conf" | awk '{print $2}' | sed 's/;$//')
 }
 
 # Users
