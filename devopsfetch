@@ -53,7 +53,7 @@ help(){
 
 # Process options when the devopsfetch is called
 case "$1" in
-        p | ports) 
+        -p | --ports) 
             ports "$2"
             ;;
 
