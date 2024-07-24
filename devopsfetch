@@ -82,9 +82,11 @@ case "$1" in
         -h|--help)
         help
         ;;
-        # \?)
-        #     echo "Invalid options"
-        #     help
-        #     ;;
+
+        *)
+        echo "Invalid option. Use -h or --help for usage information."
+        help
+        exit 1
+        ;;
 
 esac
