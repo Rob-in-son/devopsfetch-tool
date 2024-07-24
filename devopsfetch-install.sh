@@ -1,7 +1,7 @@
-# Check if running as root
-if [ "$EUID" -ne 0 ]; then
-    echo "Please run as root"
-    exit 1
+# Check if the script is running as root
+if [ "$(id -u)" != "0" ]; then
+  echo "This script requires root privileges. Please run with sudo or run as root"
+  exit 1
 fi
 
 # Install dependencies
