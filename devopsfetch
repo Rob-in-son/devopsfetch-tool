@@ -8,26 +8,27 @@ if [ "$(id -u)" != "0" ]; then
   exit 1
 fi
 
-# ports
-ports(){
+# Function to display active ports and services
+ports() {
     if [ -z "$1" ]; then
         echo "Active Ports and Services:"
-        (echo "Port Protocol Service PID Command";
-         sudo lsof -i -P -n | grep LISTEN | awk '{print $9, $1, $2}' | sed 's/://' | sort -n | while read port prog pid; do
-             proto=$(echo $port | cut -d'(' -f2 | cut -d')' -f1)
-             port=$(echo $port | cut -d'(' -f1)
-             cmd=$(ps -p $pid -o comm= | head -1)
-             echo "$port $proto $prog $pid $cmd"
-         done) | column -t
+        echo "Port Protocol Service PID Command"
+        # Use lsof to list listening ports, format output, and display as a table
+        sudo lsof -i -P -n | grep LISTEN | awk '{print $9, $1, $2}' | sed 's/://' | sort -n | while read port prog pid; do
+            proto=$(echo $port | cut -d'(' -f2 | cut -d')' -f1)
+            port=$(echo $port | cut -d'(' -f1)
+            cmd=$(ps -p $pid -o comm= | head -1)
+            echo "$port $proto $prog $pid $cmd"
+        done | column -t
     else
-    #show specific details for a port
+        # Show specific details for a port
         echo "Details for port $1:"
         sudo lsof -i :$1 -P -n | column -t
     fi
 }
 
-# docker
-docker_info(){
+# Function to display Docker images and containers
+docker_info() {
     if [ -z "$1" ]; then
         echo "Docker Images:"
         docker images | column -t
@@ -35,22 +36,24 @@ docker_info(){
         echo "Docker Containers:"
         docker ps -a | column -t
     else
-    #show specific details for container
+        # Show specific details for a container
         echo "Details for container $1:"
         docker inspect "$1" | jq '.[0] | {Name: .Name, State: .State, Mounts: .Mounts, NetworkSettings: .NetworkSettings}'
     fi
 }
 
-# Nginx
-nginx(){
+# Function to display Nginx configurations
+nginx() {
     if [ -z "$1" ]; then
         echo "Nginx Configurations:"
         echo "Config File                              | Domain                        | Proxy"
+        # Extract server_name and proxy_pass information from Nginx config files
         grep -H -r "server_name\|proxy_pass" /etc/nginx/sites-enabled/* | awk '
             /server_name/ { split($0, a, ":"); file=a[1]; domain=$3; gsub(/;/, "", domain) }
             /proxy_pass/ { proxy=$3; gsub(/;/, "", proxy); print file " | " domain " | " proxy }
         ' | column -t -s '|'
-   else
+    else
+        # Show details for a specific domain
         domain="$1"
         echo "Details for domain $domain:"
         config_file=$(grep -l "server_name.*$domain" /etc/nginx/sites-enabled/*)
@@ -70,14 +73,15 @@ nginx(){
     fi
 }
 
-# Users
-users(){
+# Function to display users and last login times
+users() {
     if [ -z "$1" ]; then
         echo "Users and Last Login Times:"
         seen=()
+        # Filter out reboot and wtmp entries, and print unique users
         last | awk '/^[^w]/ {if (!seen[$1]) {print $1, $3, $4, $5; seen[$1] = 1}}' | column -t
     else
-    #show specific details of a user
+        # Show specific details for a user
         echo "Details for user $1:"
         id "$1"
         echo "Last login:"
@@ -85,8 +89,8 @@ users(){
     fi
 }
 
-# Time range
-time_range(){
+# Function to display activities within a specified time range
+time_range() {
     if [ -z "$1" ]; then
         echo "Error: No date provided. Usage: devopsfetch -t YYYY-MM-DD [YYYY-MM-DD]"
         return 1
@@ -97,24 +101,6 @@ time_range(){
     
     echo "Activities from $start_date to $end_date:"
     journalctl --since "$start_date" --until "$end_date 23:59:59" | tail -n 50
-}
-
-# Help
-help(){
-    echo """Usage: devopsfetch [OPTIONS]
-    Your devops tool for server information retrieval and monitoring
-    Global Options: 
-        -p  --port    Display all active ports and services
-                      Use -p <port_number> to get detailed information about a specific port 
-        -d  --docker  List all Docker images and containers 
-                      Use -d <container_name> to get detailed information about a specific container
-        -n  --nginx   Display all Nginx domains and their ports
-                      Use -n <domain> to get detailed configuration information for a specific domain
-        -u  --users   List all users and their last login times
-                      Use -u <username> ls
-                      to get detailed information about a specific user
-        -t  --time    Display activities within a specified time range
-        -h  --help    Provide usage instructions for the program"""
 }
 
 # Process options when the devopsfetch is called
