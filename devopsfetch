@@ -46,39 +46,19 @@ nginx(){
     if [ -z "$1" ]; then
         echo "Nginx Configurations:"
         (echo "Config_File Domain Port Proxy";
-        for conf in /etc/nginx/sites-enabled/*; do
-            if [ -f "$conf" ]; then
-                while IFS= read -r line; do
-                    if [[ $line =~ server_name[[:space:]]+(.+);$ ]]; then
-                        domain="${BASH_REMATCH[1]}"
-                    elif [[ $line =~ listen[[:space:]]+([0-9]+)([[:space:]]+ssl)?;$ ]]; then
-                        port="${BASH_REMATCH[1]}"
-                        if [[ -n "${BASH_REMATCH[2]}" ]]; then
-                            port="${port}(SSL)"
-                        fi
-                    elif [[ $line =~ proxy_pass[[:space:]]+(.+);$ ]]; then
-                        proxy="${BASH_REMATCH[1]}"
-                        echo "$conf $domain $port $proxy"
-                        unset domain port proxy
-                    fi
-                done < "$conf"
-            fi
-        done) | column -t
+        grep -H -r "server_name\|listen\|proxy_pass" /etc/nginx/sites-enabled/* | 
+        awk '
+        /server_name/ {split($0,a,":"); file=a[1]; domain=$3; gsub(/;/,"",domain)}
+        /listen/ {port=$3; gsub(/;/,"",port)}
+        /proxy_pass/ {proxy=$3; gsub(/;/,"",proxy); print file, domain, port, proxy}
+        ' | sort -u) | column -t
     else
         echo "Configuration for domain $1:"
-        found=false
-        for conf in /etc/nginx/sites-enabled/*; do
-            if grep -q "server_name.*$1" "$conf"; then
-                echo "File: $conf"
-                echo
-                sed -n '/server {/,/}/p' "$conf"
-                found=true
-                break
-            fi
+        grep -H -r "server_name.*$1" /etc/nginx/sites-enabled/* | 
+        while IFS=: read -r file _; do
+            echo "File: $file"
+            sed -n '/server {/,/}/p' "$file"
         done
-        if [ "$found" = false ]; then
-            echo "No configuration found for domain $1"
-        fi
     fi
 }
 
