@@ -45,11 +45,12 @@ docker_info(){
 nginx(){
     if [ -z "$1" ]; then
         echo "Nginx Configurations:"
-        echo "Config File                              | Domain                        | Port | Proxy"
-        grep -H -r "server_name\|listen\|proxy_pass" /etc/nginx/sites-enabled/* | awk '
+        echo "----------------------------------------------------"
+        echo "Config File                              | Domain                        | Proxy"
+        echo "----------------------------------------------------"
+        grep -H -r "server_name\|proxy_pass" /etc/nginx/sites-enabled/* | awk '
             /server_name/ { split($0, a, ":"); file=a[1]; domain=$3; gsub(/;/, "", domain) }
-            /listen/ { port=$3; gsub(/;/, "", port) }
-            /proxy_pass/ { proxy=$3; gsub(/;/, "", proxy); print file " | " domain " | " port " | " proxy }
+            /proxy_pass/ { proxy=$3; gsub(/;/, "", proxy); print file " | " domain " | " proxy }
         ' | column -t -s '|'
     else
         echo "Configuration for domain $1:"
