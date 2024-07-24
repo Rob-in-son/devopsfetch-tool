@@ -24,8 +24,12 @@ fi
 # Install dependencies
 apt-get update
 check_success "Failed to update package list"
-apt-get install -y jq nginx docker.io
+# Run custom Docker installation script
+./docker_install.sh
+check_success "Failed to install Docker using custom script"
+apt-get install -y jq nginx
 check_success "Failed to install dependencies"
+
 
 # Copy devopsfetch script to /usr/local/bin
 cp devopsfetch /usr/local/bin/
