@@ -25,7 +25,7 @@ fi
 apt-get update
 check_success "Failed to update package list"
 # Run custom Docker installation script
-./docker_install.sh
+./docker-install.sh
 check_success "Failed to install Docker using custom script"
 apt-get install -y jq nginx
 check_success "Failed to install dependencies"
