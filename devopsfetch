@@ -54,7 +54,7 @@ help(){
 # Process options when the devopsfetch is called
 case "$1" in
         p | ports) 
-            ports
+            ports "$2"
             ;;
 
         -d | --docker) 
