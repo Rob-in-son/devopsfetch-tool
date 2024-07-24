@@ -48,17 +48,21 @@ nginx(){
         (echo "Config_File Domain Port Proxy";
         for conf in /etc/nginx/sites-enabled/*; do
             if [ -f "$conf" ]; then
-                domain=$(grep -m1 'server_name' "$conf" | awk '{print $2}' | sed 's/;$//')
-                port=$(grep -m1 'listen' "$conf" | awk '{print $2}' | sed 's/;$//')
-                proxy=$(grep -m1 'proxy_pass' "$conf" | awk '{print $2}' | sed 's/;$//')
-                
-                # If proxy is not found, try to find root
-                if [ -z "$proxy" ]; then
-                    proxy=$(grep -m1 'root' "$conf" | awk '{print $2}' | sed 's/;$//')
-                    proxy=${proxy:-"N/A"}
-                fi
-                
-                echo "$conf $domain ${port:-80} $proxy"
+                # Use awk to parse the entire file and extract all server blocks
+                awk '
+                    BEGIN { in_server = 0; }
+                    /server[[:space:]]*{/ { in_server = 1; domain = ""; port = ""; proxy = ""; }
+                    /server_name/ && in_server { domain = $2; gsub(/;/, "", domain); }
+                    /listen/ && in_server { port = $2; gsub(/;/, "", port); }
+                    /proxy_pass/ && in_server { proxy = $2; gsub(/;/, "", proxy); }
+                    /}/ && in_server {
+                        if (domain != "" && port != "") {
+                            gsub(/;/, "", port);
+                            print FILENAME, domain, port, (proxy != "" ? proxy : "N/A");
+                        }
+                        in_server = 0;
+                    }
+                ' "$conf"
             fi
         done) | column -t
     else
