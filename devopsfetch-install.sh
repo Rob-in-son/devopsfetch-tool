@@ -50,7 +50,7 @@ Description=DevOpsFetch Monitoring Service
 After=network.target
 
 [Service]
-ExecStart=/usr/local/bin/devopsfetch --time $(date +%Y-%m-%d)
+ExecStart=/usr/local/bin/devopsfetch 
 StandardOutput=append:/var/log/devopsfetch/devopsfetch.log
 StandardError=append:/var/log/devopsfetch/devopsfetch.log
 Restart=on-failure
