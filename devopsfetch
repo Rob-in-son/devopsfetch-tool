@@ -54,10 +54,7 @@ nginx(){
         ' | column -t -s '|'
     else
         echo "Configuration for domain $1:"
-        grep -H -r "server_name.*$1" /etc/nginx/sites-enabled/* | while IFS=: read -r file _; do
-            echo "File: $file"
-            sed -n '/server {/,/}/p' "$file" | sed 's/^\s*//; /^$/d'
-        done
+        grep -r -A 20 "server_name $1" /etc/nginx/sites-enabled/*
     fi
 }
 
