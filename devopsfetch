@@ -74,7 +74,8 @@ nginx(){
 users(){
     if [ -z "$1" ]; then
         echo "Users and Last Login Times:"
-        last | awk '/^[^w]/ {printf "%-15s %s %s %s\n", $1, $3, $4, $5}' | column -t
+        seen=()
+        last | awk '/^[^w]/ {if (!seen[$1]) {print $1, $3, $4, $5; seen[$1] = 1}}' | column -t
     else
     #show specific details of a user
         echo "Details for user $1:"
