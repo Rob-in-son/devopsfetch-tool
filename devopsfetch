@@ -48,9 +48,9 @@ nginx(){
         (echo "Config_File        Domain                Port      Proxy";
          grep -H -r "server_name\|listen\|proxy_pass" /etc/nginx/sites-enabled/* |
          awk '
-             BEGIN { FS = ":"; OFS = "\t" }  # Set field separator and output separator
+             BEGIN { FS = ":"; OFS = "\t" }
              /server_name/ { split($0, a, ":") ; file=a[1]; domain=$3; gsub(/;/, "", domain) }
-             /listen/ { split($0, a, ":") ; port=a[2]; gsub(/;/, "", port) }  # Extract only port number
+             /listen/ { port=$3; gsub(/;/, "", port); next }
              /proxy_pass/ { proxy=$3; gsub(/;/, "", proxy); print file, domain, port, proxy }
          ' | sort -u) | column -t
     else
