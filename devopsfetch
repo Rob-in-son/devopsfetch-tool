@@ -3,10 +3,10 @@
 # Define functions for each information required
 
 # Check if the script is running as root
-if [ "$(id -u)" != "0" ]; then
-  echo "This script requires root privileges. Please run with sudo or run as root"
-  exit 1
-fi
+# if [ "$(id -u)" != "0" ]; then
+#   echo "This script requires root privileges. Please run with sudo or run as root"
+#   exit 1
+# fi
 
 # ports
 ports(){
