@@ -3,9 +3,10 @@
 # Define functions for each information required
 
 # # ports
-# ports(){
-
-# }
+ports(){
+    echo "Active Ports and Services:"
+    ss -tuln | column -t
+}
 
 # docker
 docker_info(){
@@ -52,9 +53,9 @@ help(){
 
 # Process options when the devopsfetch is called
 case "$1" in
-        #  p | port) 
-    
-        #     ;;
+        p | ports) 
+            ports
+            ;;
 
         -d | --docker) 
             docker_info "$2"
