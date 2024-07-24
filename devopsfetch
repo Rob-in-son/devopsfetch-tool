@@ -12,7 +12,7 @@ fi
 ports() {
     if [ -z "$1" ]; then
         echo "Active Ports and Services:"
-        echo "Port Protocol Service PID Command"
+        echo "Port  Protocol   Service   PID   Command"
         # Use lsof to list listening ports, format output, and display as a table
         sudo lsof -i -P -n | grep LISTEN | awk '{print $9, $1, $2}' | sed 's/://' | sort -n | while read port prog pid; do
             proto=$(echo $port | cut -d'(' -f2 | cut -d')' -f1)
