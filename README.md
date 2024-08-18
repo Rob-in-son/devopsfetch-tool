@@ -12,8 +12,8 @@ DevOpsFetch is a Bash script designed to provide system information retrieval an
 
 1. Clone the repository:
 ```sh
-git clone https://github.com/Rob-in-son/HNG-stage5.git
-cd devopsfetch
+git clone https://github.com/Rob-in-son/devopsfetch-tool.git
+cd devopsfetch-tool
 ```
 
 2. Run the installation script:
